@@ -40,6 +40,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
     masterclear.allow_retain_esim_profiles_after_fdr=true
 
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/init.debuglog.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debuglog.rc \
+    $(LOCAL_PATH)/debuglog.sh:$(TARGET_COPY_OUT_VENDOR)/bin/debuglog.sh
+
+PRODUCT_COPY_FILES += \
     device/google/crosshatch/default-permissions.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default-permissions/default-permissions.xml \
     device/google/crosshatch/component-overrides.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sysconfig/component-overrides.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml \
