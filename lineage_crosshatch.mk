@@ -27,3 +27,7 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     DeviceProduct=crosshatch
 
 $(call inherit-product, vendor/google/crosshatch/crosshatch-vendor.mk)
+
+# MindTheGapps (Android 15 / vic) — baked in so all-EROFS is safe:
+# nothing is flashed into system/product post-install.
+$(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
