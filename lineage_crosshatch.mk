@@ -31,3 +31,7 @@ $(call inherit-product, vendor/google/crosshatch/crosshatch-vendor.mk)
 # Ship APEXes uncompressed: compressed .capex are unpacked to /data on the first
 # boot after every update (~5 s on sunfish). Costs ~150 MB more in super.
 PRODUCT_COMPRESSED_APEX := false
+
+# MindTheGapps, baked in: with system_ext and product on EROFS nothing can
+# be flashed into them after the ROM.
+$(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
