@@ -744,3 +744,15 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Set system properties identifying the chipset
 PRODUCT_VENDOR_PROPERTIES += ro.soc.manufacturer=Qualcomm
 PRODUCT_VENDOR_PROPERTIES += ro.soc.model=SDM845
+
+# Updated path pointing inside your device tree directory
+USER_APPS_BP := $(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/*.apk)
+PRODUCT_PACKAGES += $(foreach apk,$(USER_APPS_BP),$(basename $(notdir $(apk))))
+# .apks (bundletool APK Set, android_app_set modules) -- split-config apps like Gboard
+USER_APP_SETS_BP := $(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/*.apks)
+PRODUCT_PACKAGES += $(foreach apkset,$(USER_APP_SETS_BP),$(basename $(notdir $(apkset))))
+# privapp-permissions-*.xml (prebuilt_etc modules) -- module name is the full
+# filename including extension, unlike the .apk/.apks rules above.
+USER_APP_PERMS_BP := $(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/privapp-permissions-*.xml)
+PRODUCT_PACKAGES += $(foreach xml,$(USER_APP_PERMS_BP),$(notdir $(xml)))
+

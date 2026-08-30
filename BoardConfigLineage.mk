@@ -28,7 +28,7 @@ BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := erofs
 # Reserve space for gapps install
 -include vendor/lineage/config/BoardConfigReservedSize.mk
 ifneq ($(WITH_GMS),true)
-BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 1069547520
+BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 0
 endif
 
 # SELinux
@@ -44,3 +44,6 @@ endif
 ifneq ($(WITH_AVB),true)
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 endif
+
+include device/google/crosshatch/prebuilts/extra-apps/sepolicy/Android.mk
+
