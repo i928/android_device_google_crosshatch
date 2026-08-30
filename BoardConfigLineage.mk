@@ -49,3 +49,6 @@ endif
 ifneq ($(WITH_AVB),true)
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 endif
+
+include device/google/crosshatch/prebuilts/extra-apps/sepolicy/Android.mk
+
