@@ -41,7 +41,12 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init.debuglog.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debuglog.rc \
-    $(LOCAL_PATH)/debuglog.sh:$(TARGET_COPY_OUT_VENDOR)/bin/debuglog.sh
+    $(LOCAL_PATH)/debuglog.sh:$(TARGET_COPY_OUT_VENDOR)/bin/debuglog.sh \
+    $(LOCAL_PATH)/init.data-adb-seed.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.data-adb-seed.rc \
+    $(LOCAL_PATH)/data-adb-seed/daily_clean.sh:$(TARGET_COPY_OUT_VENDOR)/etc/data-adb-seed/daily_clean.sh \
+    $(LOCAL_PATH)/data-adb-seed/cron/crontabs/root:$(TARGET_COPY_OUT_VENDOR)/etc/data-adb-seed/cron/crontabs/root \
+    $(LOCAL_PATH)/data-adb-seed/boot-completed.d/low_battery_shutdown.sh:$(TARGET_COPY_OUT_VENDOR)/etc/data-adb-seed/boot-completed.d/low_battery_shutdown.sh \
+    $(LOCAL_PATH)/data-adb-seed/boot-completed.d/start_crond.sh:$(TARGET_COPY_OUT_VENDOR)/etc/data-adb-seed/boot-completed.d/start_crond.sh
 
 PRODUCT_COPY_FILES += \
     device/google/crosshatch/default-permissions.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default-permissions/default-permissions.xml \
