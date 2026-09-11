@@ -1,0 +1,7 @@
+# KSU systemless-modules overlay: the kernel loop-mounts
+# /data/adb/overlayfs/overlayfs.img (labeled adb_data_file). Without this the
+# image-backed mount is denied (avc kernel:s0 -> adb_data_file read) and EXT4
+# can't read the superblock; the mount then falls back, so this only silences
+# the denial. adb_data_file is a public type; kernel is a coredomain, so this
+# lives in system_ext/private (plat-side) rather than vendor sepolicy.
+allow kernel adb_data_file:file read;
