@@ -42,7 +42,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init.debuglog.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debuglog.rc \
     $(LOCAL_PATH)/debuglog.sh:$(TARGET_COPY_OUT_VENDOR)/bin/debuglog.sh \
-    $(LOCAL_PATH)/init.data-adb-seed.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.data-adb-seed.rc \
+    $(LOCAL_PATH)/init.data-adb-seed.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.data-adb-seed.rc \
     $(LOCAL_PATH)/data-adb-seed/daily_clean.sh:$(TARGET_COPY_OUT_VENDOR)/etc/data-adb-seed/daily_clean.sh \
     $(LOCAL_PATH)/data-adb-seed/cron/crontabs/root:$(TARGET_COPY_OUT_VENDOR)/etc/data-adb-seed/cron/crontabs/root \
     $(LOCAL_PATH)/data-adb-seed/boot-completed.d/low_battery_shutdown.sh:$(TARGET_COPY_OUT_VENDOR)/etc/data-adb-seed/boot-completed.d/low_battery_shutdown.sh \
@@ -760,4 +760,17 @@ PRODUCT_PACKAGES += $(foreach apkset,$(USER_APP_SETS_BP),$(basename $(notdir $(a
 # filename including extension, unlike the .apk/.apks rules above.
 USER_APP_PERMS_BP := $(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/privapp-permissions-*.xml)
 PRODUCT_PACKAGES += $(foreach xml,$(USER_APP_PERMS_BP),$(notdir $(xml)))
+# KernelSUNext's bundled libksud.so never gets extracted for a pre-baked
+# /product/app install (PackageManager only extracts lib/<abi>/*.so on a
+# normal /data/app install) -- the app's own code exec's a hardcoded path
+# expecting that extraction to have happened, so ship the binary as its own
+# copied file at that exact path instead. Soong prebuilt module types
+# (prebuilt_etc, prebuilt_root, cc_prebuilt_binary + relative_install_path)
+# all reject or can't express escaping to an arbitrary nested product path,
+# so this uses plain PRODUCT_COPY_FILES instead -- which requires
+# BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true, set in
+# BoardConfigLineage.mk (this flag is board-scoped, not product-scoped --
+# setting it here in device.mk is silently ignored by board_config.mk).
+PRODUCT_COPY_FILES += \
+    device/google/crosshatch/ksud_prebuilt/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so
 
