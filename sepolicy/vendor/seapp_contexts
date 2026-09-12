@@ -1,0 +1,5 @@
+# Domain for MtManager (bin.mt.plus) -- runs it in the standard untrusted_app
+# sandbox instead of whatever domain AOSP's default isPrivApp rules would assign
+# a resigned third-party privileged app. seinfo=mtmanager_app is assigned in the
+# matching mac_permissions.xml signer stanza for this ROM's release key.
+user=_app seinfo=mtmanager_app domain=untrusted_app levelFrom=all
