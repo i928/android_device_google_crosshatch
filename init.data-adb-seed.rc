@@ -6,6 +6,9 @@ on post-fs-data
     copy /vendor/etc/data-adb-seed/daily_clean.sh /data/adb/daily_clean.sh
     chmod 0755 /data/adb/daily_clean.sh
 
+    copy /vendor/etc/data-adb-seed/f2fs_compress.sh /data/adb/f2fs_compress.sh
+    chmod 0755 /data/adb/f2fs_compress.sh
+
     copy /vendor/etc/data-adb-seed/cron/crontabs/root /data/adb/cron/crontabs/root
     chmod 0600 /data/adb/cron/crontabs/root
 
