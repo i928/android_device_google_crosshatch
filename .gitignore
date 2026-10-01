@@ -1,3 +1,7 @@
 edk2
 # Private signing key of ksu_manager_cert: local only, never pushed.
 security/ksu_manager/*.pk8
+ksu-autoinstall/*
+!ksu-autoinstall/snapshot/
+ksu-autoinstall/snapshot/*
+!ksu-autoinstall/snapshot/make-snapshot.sh

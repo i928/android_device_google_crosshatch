@@ -787,3 +787,36 @@ PRODUCT_COPY_FILES += \
 # f2fs_io for /data/adb/f2fs_compress.sh (compress_mode=user)
 PRODUCT_PACKAGES += \
     f2fs_io
+
+# KernelSU module autoinstall, ported from device/google/sunfish (its KSU.md has
+# the full setup). On a wiped device (fastboot -w) /data/adb is empty, so no
+# modules load; /product survives, so the ROM carries the zips and installs them.
+# ksu-autoinstall/ is untracked local content ($(wildcard) yields nothing when
+# it is absent, so a fresh tree still builds):
+#   ksu-autoinstall/NN-<name>.zip         installed once each, in filename order
+#   ksu-autoinstall/scripts/*.sh          boot scripts, run detached every boot
+#   ksu-autoinstall/*.allowlist           optional: apps granted root on a wipe
+#   ksu-autoinstall/snapshot/ksu-snapshot.tar.gz  optional finished install
+#     (make-snapshot.sh, tracked); its zips go in installed-in-snapshot/
+# init.ksu-autoinstall.rc also seeds /data/adb/ksud and runs `ksud install`, so
+# KernelSU (and data-adb-seed's boot-completed.d scripts) work before the
+# manager is ever opened. Log: /data/adb/ksu-autoinstall.log.
+KSU_AUTOINSTALL_DIR := device/google/crosshatch/ksu-autoinstall
+PRODUCT_COPY_FILES += \
+    $(foreach z,$(wildcard $(KSU_AUTOINSTALL_DIR)/*.zip),\
+        $(z):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/$(notdir $(z))) \
+    $(foreach a,$(wildcard $(KSU_AUTOINSTALL_DIR)/*.allowlist),\
+        $(a):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/$(notdir $(a))) \
+    $(foreach s,$(wildcard $(KSU_AUTOINSTALL_DIR)/scripts/*.sh),\
+        $(s):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/scripts/$(notdir $(s))) \
+    $(foreach t,$(wildcard $(KSU_AUTOINSTALL_DIR)/snapshot/ksu-snapshot.tar.gz),\
+        $(t):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/$(notdir $(t))) \
+    device/google/crosshatch/ksu-snapshot.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/bin/ksu-snapshot.sh \
+    device/google/crosshatch/ksu-autoinstall.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/bin/ksu-autoinstall.sh \
+    device/google/crosshatch/init.ksu-autoinstall.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.ksu-autoinstall.rc
+
+# One reboot after installing so the modules go live. A persist. default in
+# build.prop applies only while /data/property is empty, i.e. after a wipe.
+# Turn off with: setprop persist.ksu_ai_reboot 0
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.ksu_ai_reboot=1
