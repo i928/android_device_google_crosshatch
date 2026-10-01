@@ -4,6 +4,11 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# Zip and version names carry the build time (lineage-22.2-YYYYMMDD_HHMMSS-...),
+# so several builds on one day are told apart. Must be set before the inherit
+# below: vendor/lineage/config/version.mk reads it.
+LINEAGE_VERSION_APPEND_TIME_OF_DAY := true
+
 # Inherit some common Lineage stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
