@@ -26,6 +26,12 @@ value:2903
 [AID_VENDOR_RFS_SHARED]
 value:2904
 
+[product/app/KernelSUNext/lib/arm64/libksud.so]
+mode: 0755
+user: AID_ROOT
+group: AID_ROOT
+caps: 0
+
 [vendor/bin/pm-service]
 mode: 0755
 user: AID_SYSTEM

@@ -2,6 +2,8 @@ PRODUCT_PUBLIC_SEPOLICY_DIRS += device/google/crosshatch/sepolicy/public
 PRODUCT_PRIVATE_SEPOLICY_DIRS += device/google/crosshatch/sepolicy/private
 
 # vendors
+# Custom user-app sepolicy (e.g. MtManager's untrusted_app domain grant)
+BOARD_VENDOR_SEPOLICY_DIRS += device/google/crosshatch/sepolicy/vendor
 BOARD_VENDOR_SEPOLICY_DIRS += device/google/crosshatch/sepolicy/vendor/qcom/common
 BOARD_VENDOR_SEPOLICY_DIRS += device/google/crosshatch/sepolicy/vendor/qcom/sdm845
 BOARD_VENDOR_SEPOLICY_DIRS += device/google/crosshatch/sepolicy/vendor/google
