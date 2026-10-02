@@ -820,3 +820,13 @@ PRODUCT_COPY_FILES += \
 # Turn off with: setprop persist.ksu_ai_reboot 0
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.ksu_ai_reboot=1
+
+# Apps installed as normal user apps once setup wizard is done, as on sunfish:
+# ~/extraAPKs/install/*.apk -> prebuilt_etc userapp_<name> in
+# /product/etc/install-apps, installed by install-apps.sh, which publish.sh
+# places in ksu-autoinstall/scripts/ and ksu-autoinstall.sh runs every boot
+# (one marker per apk in /data/adb/.ksu-autoinstall). They keep their own
+# signature, so they update normally. File Manager+ ships this way: built in,
+# it would replace AOSP DocumentsUI's role on gms trees (see run.sh).
+USER_INSTALL_APKS := $(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/install-apps/*.apk)
+PRODUCT_PACKAGES += $(foreach apk,$(USER_INSTALL_APKS),userapp_$(basename $(notdir $(apk))))
