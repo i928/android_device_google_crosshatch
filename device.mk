@@ -781,7 +781,12 @@ PRODUCT_PACKAGES += $(foreach xml,$(USER_APP_PERMS_BP),$(notdir $(xml)))
 # BoardConfigLineage.mk (this flag is board-scoped, not product-scoped --
 # setting it here in device.mk is silently ignored by board_config.mk).
 PRODUCT_COPY_FILES += \
-    device/google/crosshatch/ksud_prebuilt/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so
+    device/google/crosshatch/ksud_prebuilt/3.4/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so \
+    device/google/crosshatch/ksud_prebuilt/3.4/libadbroot.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libadbroot.so
+# KernelSU-Next 3.4 (kernel driver legacy-susfs-v2-3.4, UAPI 4): ksud and
+# libadbroot.so from the 3.4.0 manager (33296), tracked in ksud_prebuilt/3.4/.
+# The manager runs `ksud install --libadbroot <nativeLibraryDir>/libadbroot.so`;
+# libadbroot.so is a shared library, not exec'd, so it needs no +x.
 
 
 # f2fs_io for /data/adb/f2fs_compress.sh (compress_mode=user)
