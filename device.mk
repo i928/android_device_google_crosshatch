@@ -44,10 +44,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/debuglog.sh:$(TARGET_COPY_OUT_VENDOR)/bin/debuglog.sh \
     $(LOCAL_PATH)/init.data-adb-seed.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.data-adb-seed.rc \
     $(LOCAL_PATH)/data-adb-seed/daily_clean.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/daily_clean.sh \
-    $(LOCAL_PATH)/data-adb-seed/f2fs_compress.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/f2fs_compress.sh \
-    $(LOCAL_PATH)/data-adb-seed/cron/crontabs/root:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/cron/crontabs/root \
     $(LOCAL_PATH)/data-adb-seed/boot-completed.d/low_battery_shutdown.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/low_battery_shutdown.sh \
-    $(LOCAL_PATH)/data-adb-seed/boot-completed.d/start_crond.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/start_crond.sh
+    $(LOCAL_PATH)/data-adb-seed/boot-completed.d/daily_clean_timer.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/daily_clean_timer.sh
 
 PRODUCT_COPY_FILES += \
     device/google/crosshatch/default-permissions.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default-permissions/default-permissions.xml \
@@ -789,7 +787,7 @@ PRODUCT_COPY_FILES += \
 # libadbroot.so is a shared library, not exec'd, so it needs no +x.
 
 
-# f2fs_io for /data/adb/f2fs_compress.sh (compress_mode=user)
+# f2fs_io for /data/adb/daily_clean.sh (compress_mode=user)
 PRODUCT_PACKAGES += \
     f2fs_io
 

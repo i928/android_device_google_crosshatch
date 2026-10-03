@@ -1,2 +1,0 @@
-0 4 * * * /system/bin/sh /data/adb/daily_clean.sh
-30 4 * * * /system/bin/sh /data/adb/f2fs_compress.sh
