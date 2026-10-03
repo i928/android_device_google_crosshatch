@@ -84,3 +84,8 @@ PRODUCT_PACKAGES += \
 
 # Properties
 TARGET_VENDOR_PROP := $(LOCAL_PATH)/vendor.prop
+
+# Updater: OTA feed in github.com/i928/OTA (branch lineage-22.2), zips on
+# SourceForge; written and pushed by ~/bin/deploy_lineage_ota.sh.
+PRODUCT_PRODUCT_PROPERTIES += \
+    lineage.updater.uri=https://raw.githubusercontent.com/i928/OTA/lineage-22.2/builds/{device}.json
