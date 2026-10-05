@@ -580,7 +580,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.default_cdma_sub=0
 
 # Set network mode to Global by default and no DSDS/DSDA
-PRODUCT_PROPERTY_OVERRIDES += ro.telephony.default_network=9
+PRODUCT_PROPERTY_OVERRIDES += ro.telephony.default_network=11
 
 # Set display color mode to Automatic by default
 PRODUCT_PROPERTY_OVERRIDES += \
