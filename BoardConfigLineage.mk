@@ -11,6 +11,9 @@ TARGET_KERNEL_CLANG_VERSION := r614150
 TARGET_KERNEL_CLANG_PATH := $(abspath .)/prebuilts/clang/kernel/$(HOST_PREBUILT_TAG)/clang-$(TARGET_KERNEL_CLANG_VERSION)
 TARGET_KERNEL_CONFIG := b1c1_defconfig
 TARGET_KERNEL_LLVM_BINUTILS := false
+# ld.lld for the LTO link (4.9 kernel branch clang23-lld-lto: Clang 23 ships no
+# LLVMgold.so for gold). Only LD: LLVM_BINUTILS would also force LLVM=1 LLVM_IAS=1.
+TARGET_KERNEL_ADDITIONAL_FLAGS := LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
 TARGET_KERNEL_SOURCE := kernel/google/msm-4.9
 TARGET_NEEDS_DTBOIMAGE := true
 
