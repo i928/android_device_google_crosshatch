@@ -36,3 +36,7 @@ $(call inherit-product, vendor/google/crosshatch/crosshatch-vendor.mk)
 # MindTheGapps (Android 15 / vic) — baked in so all-EROFS is safe:
 # nothing is flashed into system/product post-install.
 $(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
+
+# Ship APEXes uncompressed: compressed .capex are unpacked to /data on the first
+# boot after every update (~5 s on sunfish). Costs ~150 MB more in super.
+PRODUCT_COMPRESSED_APEX := false
