@@ -1,0 +1,32 @@
+[
+  {
+  "repository": "LineageOS/android_packages_apps_ElmyraService",
+  "target_path": "packages/apps/ElmyraService",
+  "remote": "github-non-los",
+  "branch": "lineage-22.2"
+  },
+  {
+    "repository": "kernel_google_b1c1",
+    "target_path": "kernel/google/b1c1"
+  },
+  {
+    "repository": "vendor_google_crosshatch",
+    "target_path": "vendor/google/crosshatch"
+  },
+  {
+    "repository": "vendor_google_blueline",
+    "target_path": "vendor/google/blueline"
+  },
+  {
+    "repository": "Oneloutre/vendor_Camera",
+    "target_path": "vendor/Camera/b1c1",
+    "remote": "github-non-los",
+    "branch": "b1c1"
+  },
+  {
+    "repository": "LineageOS/android_device_google_gs-common",
+    "target_path": "device/google/gs-common",
+    "remote": "github-non-los",
+    "branch": "lineage-22.2"
+  }
+]
