@@ -785,10 +785,10 @@ PRODUCT_PACKAGES += $(foreach xml,$(USER_APP_PERMS_BP),$(notdir $(xml)))
 # BoardConfigLineage.mk (this flag is board-scoped, not product-scoped --
 # setting it here in device.mk is silently ignored by board_config.mk).
 PRODUCT_COPY_FILES += \
-    device/google/crosshatch/ksud_prebuilt/3.4.1/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so \
-    device/google/crosshatch/ksud_prebuilt/3.4.1/libadbroot.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libadbroot.so
-# KernelSU-Next 3.4.1 (kernel driver 5a21ddac, UAPI 5): ksud and
-# libadbroot.so from the 3.4.1 manager, tracked in ksud_prebuilt/3.4.1/.
+    device/google/crosshatch/ksud_prebuilt/3.4.2/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so \
+    device/google/crosshatch/ksud_prebuilt/3.4.2/libadbroot.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libadbroot.so
+# KernelSU-Next manager 3.4.2 (kernel driver 3.4.1 5a21ddac, UAPI 5): ksud and
+# libadbroot.so from the 3.4.2 manager, tracked in ksud_prebuilt/3.4.2/.
 # The manager runs `ksud install --libadbroot <nativeLibraryDir>/libadbroot.so`;
 # libadbroot.so is a shared library, not exec'd, so it needs no +x.
 
