@@ -20,7 +20,9 @@ TARGET_NEEDS_DTBOIMAGE := true
 # Bootanimation: LineageOS' generated 1440-wide animation with the loop (part1) and
 # outro (part2) changed from "c" (always played to the end) to "p", so they stop once boot
 # is done instead of holding sys.boot_completed (part1 loop 1.4 s, outro ~3.5 s).
-TARGET_BOOTANIMATION := device/google/crosshatch/bootanimation/bootanimation.zip
+# Rename the zip whenever its content changes: vendor/lineage's genrule copies it by
+# path from its cmd without declaring it as an input, so only a new path reruns it.
+TARGET_BOOTANIMATION := device/google/crosshatch/bootanimation/bootanimation-p1p2.zip
 
 # CROSSHATCH_KERNEL_DEBUG=<variant> builds the kernel with the options of
 # $(TARGET_KERNEL_SOURCE)/build.config.bluecross_<variant> (debug_api,
