@@ -51,9 +51,6 @@ $(warning CROSSHATCH_KERNEL_DEBUG -> kernel fragment $(CROSSHATCH_KDEBUG_FRAG), 
 TARGET_KERNEL_CONFIG += crosshatch_kdebug.config
 endif
 
-# Manifests
-DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += vendor/lineage/config/device_framework_matrix.xml
-
 # Partitions
 AB_OTA_PARTITIONS += \
     vendor
