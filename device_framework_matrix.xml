@@ -196,4 +196,22 @@
             <instance>slot1</instance>
         </interface>
     </hal>
+    <!-- HIDL 1.0 services still shipped by this device; dropped from the
+         A16 framework matrices along with FCM level 5. -->
+    <hal format="hidl" optional="true">
+        <name>android.hardware.health.storage</name>
+        <version>1.0</version>
+        <interface>
+            <name>IStorage</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl" optional="true">
+        <name>android.hardware.power.stats</name>
+        <version>1.0</version>
+        <interface>
+            <name>IPowerStats</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
 </compatibility-matrix>
