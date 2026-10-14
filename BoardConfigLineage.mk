@@ -17,9 +17,9 @@ TARGET_KERNEL_ADDITIONAL_FLAGS := LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
 TARGET_KERNEL_SOURCE := kernel/google/msm-4.9
 TARGET_NEEDS_DTBOIMAGE := true
 
-# Bootanimation: LineageOS' generated 1440-wide animation with the outro (part2)
-# changed from "c" (always played to the end) to "p", so it is skipped once boot
-# is done instead of holding sys.boot_completed for its 210 frames (~3.5 s).
+# Bootanimation: LineageOS' generated 1440-wide animation with the loop (part1) and
+# outro (part2) changed from "c" (always played to the end) to "p", so they stop once boot
+# is done instead of holding sys.boot_completed (part1 loop 1.4 s, outro ~3.5 s).
 TARGET_BOOTANIMATION := device/google/crosshatch/bootanimation/bootanimation.zip
 
 # CROSSHATCH_KERNEL_DEBUG=<variant> builds the kernel with the options of
