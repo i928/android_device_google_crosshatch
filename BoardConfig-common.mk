@@ -46,6 +46,9 @@ BOARD_KERNEL_CMDLINE += lpm_levels.sleep_disabled=1
 BOARD_KERNEL_CMDLINE += usbcore.autosuspend=7
 BOARD_KERNEL_CMDLINE += loop.max_part=7
 BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/1d84000.ufshc
+# TEMP (lin23 bring-up, 2026-10-15): a fatal init error panics instead of rebooting quietly
+# to the bootloader, so the kernel log survives in pstore for the fallback slot to read.
+BOARD_KERNEL_CMDLINE += androidboot.init_fatal_panic=true
 
 BOARD_KERNEL_BASE        := 0x00000000
 BOARD_KERNEL_PAGESIZE    := 4096
