@@ -49,6 +49,8 @@ BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/1d84000.ufshc
 # TEMP (lin23 bring-up, 2026-10-15): a fatal init error panics instead of rebooting quietly
 # to the bootloader, so the kernel log survives in pstore for the fallback slot to read.
 BOARD_KERNEL_CMDLINE += androidboot.init_fatal_panic=true
+# TEMP: the kernel (a16 debug commit) turns any reboot into the bootloader into a panic.
+BOARD_KERNEL_CMDLINE += panic_on_bootloader_reboot=1
 
 BOARD_KERNEL_BASE        := 0x00000000
 BOARD_KERNEL_PAGESIZE    := 4096
