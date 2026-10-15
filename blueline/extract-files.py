@@ -69,6 +69,13 @@ blob_fixups: blob_fixups_user_type = {
         'vendor/lib64/libwvhidl@1.3.so',
     ): blob_fixup()
         .add_needed('libcrypto_shim.so'),
+    (
+        'vendor/bin/mm-pp-dpps',
+        'vendor/lib64/camera/components/com.qti.node.eisv2.so',
+        'vendor/lib64/camera/components/com.qti.node.eisv3.so',
+        'vendor/lib64/hw/camera.sdm845.so',
+    ): blob_fixup()
+        .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so'),
     'vendor/lib64/hw/com.qti.chi.override.so': blob_fixup()
         .replace_needed('android.hardware.power-V1-ndk_platform.so', 'android.hardware.power-V1-ndk.so'),
 }  # fmt: skip
