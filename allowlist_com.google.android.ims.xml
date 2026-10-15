@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Carrier Services (Google RCS engine) must not be battery optimized: Messages
+     refuses it otherwise ("Cannot use CS.apk as it's battery optimized") and
+     shows RCS as not supported. Stock Pixels get this from google.xml. -->
+<config>
+    <allow-in-power-save package="com.google.android.ims" />
+    <allow-in-data-usage-save package="com.google.android.ims" />
+</config>
