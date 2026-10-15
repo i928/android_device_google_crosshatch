@@ -85,11 +85,11 @@ PRODUCT_PACKAGES += \
 # Properties
 TARGET_VENDOR_PROP := $(LOCAL_PATH)/vendor.prop
 
-# Updater: OTA feed in github.com/i928/OTA (branch lineage-22.2), zips on
-# SourceForge; written and pushed by ~/bin/deploy_ota.sh, which publishes to
-# the branch named here. lin23 (23.2) builds stay on the lineage-22.2 feed so
-# 22.2 phones upgrade in place; allow_major_upgrades lets the Updater install
-# a newer major version (otherwise 23.2 is listed but not installable).
+# Updater: OTA feed in github.com/i928/OTA (branch lineage-23.2, Updater API v2
+# = JSON list), zips on SourceForge; written and pushed by ~/bin/deploy_ota.sh.
+# deploy_ota also puts each 23.2 build on the lineage-22.2 feed in the API v1
+# format ({"response": [...]}) the 22.2 Updater parses, so 22.2 phones upgrade
+# in place. allow_major_upgrades lets the Updater install a newer major version.
 PRODUCT_PRODUCT_PROPERTIES += \
-    lineage.updater.uri=https://raw.githubusercontent.com/i928/OTA/lineage-22.2/builds/{device}.json \
+    lineage.updater.uri=https://raw.githubusercontent.com/i928/OTA/lineage-23.2/builds/{device}.json \
     lineage.updater.allow_major_upgrades=true
