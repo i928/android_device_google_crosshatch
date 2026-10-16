@@ -675,9 +675,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.early_gl_app_phase_offset_ns=15000000
 
-# Enable backpressure for GL comp
+# Disable backpressure for GL comp (as sunfish, apelete 967961e1): with it enabled,
+# scrolling the app drawer/recents and QS pull-down lag, worst with blur.
 PRODUCT_PROPERTY_OVERRIDES += \
-    debug.sf.enable_gl_backpressure=1
+    debug.sf.enable_gl_backpressure=0
 
 # Do not skip init trigger by default
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
