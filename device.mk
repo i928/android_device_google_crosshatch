@@ -738,6 +738,7 @@ include hardware/google/pixel/citadel/citadel.mk
 
 # power HAL
 -include hardware/google/pixel/power-libperfmgr/aidl/device.mk
+include hardware/google/pixel/PixelLogger/PixelLogger.mk
 
 # Set support one-handed mode
 PRODUCT_PRODUCT_PROPERTIES += \
