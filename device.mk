@@ -58,10 +58,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.control_privapp_permissions?=enforce
 
-# Enable on-access verification of priv apps. This requires fs-verity support in kernel.
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.apk_verity.mode=1
-
 PRODUCT_PACKAGES += \
     messaging
 
@@ -733,7 +729,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.verbose_logging_enabled=false
 
 # Pixel Logger
-include hardware/google/pixel/PixelLogger/PixelLogger.mk
 
 include hardware/google/pixel/mm/device_legacy.mk
 include device/google/gs-common/thermal/thermal_hal/device.mk
