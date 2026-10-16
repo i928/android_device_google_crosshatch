@@ -15,3 +15,6 @@ allow hal_power_default pps_socket:sock_file write;
 
 # interact with thermal_config
 set_prop(hal_power_default, vendor_thermal_prop)
+
+# Allow hal_power to access thermal service
+hal_client_domain(hal_power_default, hal_thermal)
