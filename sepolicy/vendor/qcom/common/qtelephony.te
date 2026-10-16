@@ -26,4 +26,4 @@ get_prop(qtelephony, public_vendor_default_prop)
 set_prop(qtelephony, ims_prop)
 
 dontaudit qtelephony property_socket:sock_file write;
-allow qtelephony default_prop:file read;
+dontaudit qtelephony default_prop:file read;
