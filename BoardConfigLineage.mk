@@ -62,7 +62,9 @@ CROSSHATCH_KDEBUG_NOPANIC += CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=n \
 CROSSHATCH_KDEBUG_KASAN := CONFIG_DEBUG_INFO=n
 # debug_api: no DEBUG_CREDENTIALS. KernelSU/SUSFS rewrite task creds for root;
 # a credentials check that disagrees calls BUG() (panic) at every boot.
-CROSSHATCH_KDEBUG_API := CONFIG_DEBUG_CREDENTIALS=n
+# No DMA_API_DEBUG: msm_dma_iommu_mapping.c unmaps a 1-entry copied sgl with
+# the original nents; debug_dma_unmap_sg walks past it and panics (composer).
+CROSSHATCH_KDEBUG_API := CONFIG_DEBUG_CREDENTIALS=n CONFIG_DMA_API_DEBUG=n
 _kdebug := $(shell python3 device/google/crosshatch/kernel-debug/buildconfig2frag.py \
     $(TARGET_KERNEL_SOURCE)/build.config.bluecross_$(CROSSHATCH_KERNEL_DEBUG) $(CROSSHATCH_KDEBUG_FRAG) \
     $(if $(filter debug_%,$(CROSSHATCH_KERNEL_DEBUG)),CONFIG_DEBUG_FS=y) \
@@ -76,11 +78,6 @@ endif
 # $(warning), not $(info): Soong parses the board config stdout as KEY=value lines
 $(warning CROSSHATCH_KERNEL_DEBUG -> kernel fragment $(CROSSHATCH_KDEBUG_FRAG), $(_kdebug))
 TARGET_KERNEL_CONFIG += crosshatch_kdebug.config
-# DMA-API debug: the default 65536 entries ran out 15 s into boot
-# ("DMA-API: debugging out of memory - disabling"), leaving it off.
-ifeq ($(CROSSHATCH_KERNEL_DEBUG),debug_api)
-BOARD_KERNEL_CMDLINE += dma_debug_entries=262144
-endif
 endif
 
 # Partitions
