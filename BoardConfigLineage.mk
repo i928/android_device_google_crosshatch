@@ -76,6 +76,11 @@ endif
 # $(warning), not $(info): Soong parses the board config stdout as KEY=value lines
 $(warning CROSSHATCH_KERNEL_DEBUG -> kernel fragment $(CROSSHATCH_KDEBUG_FRAG), $(_kdebug))
 TARGET_KERNEL_CONFIG += crosshatch_kdebug.config
+# DMA-API debug: the default 65536 entries ran out 15 s into boot
+# ("DMA-API: debugging out of memory - disabling"), leaving it off.
+ifeq ($(CROSSHATCH_KERNEL_DEBUG),debug_api)
+BOARD_KERNEL_CMDLINE += dma_debug_entries=262144
+endif
 endif
 
 # Partitions
