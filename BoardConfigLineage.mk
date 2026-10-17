@@ -60,12 +60,16 @@ CROSSHATCH_KDEBUG_NOPANIC += CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=n \
 # (sys32.c, security/keys/sysctl.c, rsapubkey-asn1.c...): "file number 1
 # already allocated". KASAN reports still carry kallsyms names + offsets.
 CROSSHATCH_KDEBUG_KASAN := CONFIG_DEBUG_INFO=n
+# debug_api: no DEBUG_CREDENTIALS. KernelSU/SUSFS rewrite task creds for root;
+# a credentials check that disagrees calls BUG() (panic) at every boot.
+CROSSHATCH_KDEBUG_API := CONFIG_DEBUG_CREDENTIALS=n
 _kdebug := $(shell python3 device/google/crosshatch/kernel-debug/buildconfig2frag.py \
     $(TARGET_KERNEL_SOURCE)/build.config.bluecross_$(CROSSHATCH_KERNEL_DEBUG) $(CROSSHATCH_KDEBUG_FRAG) \
     $(if $(filter debug_%,$(CROSSHATCH_KERNEL_DEBUG)),CONFIG_DEBUG_FS=y) \
     $(if $(filter debug_locking,$(CROSSHATCH_KERNEL_DEBUG)),$(CROSSHATCH_KDEBUG_LOCKDEP)) \
     $(CROSSHATCH_KDEBUG_NOPANIC) \
-    $(if $(filter kasan,$(CROSSHATCH_KERNEL_DEBUG)),$(CROSSHATCH_KDEBUG_KASAN)))
+    $(if $(filter kasan,$(CROSSHATCH_KERNEL_DEBUG)),$(CROSSHATCH_KDEBUG_KASAN)) \
+    $(if $(filter debug_api,$(CROSSHATCH_KERNEL_DEBUG)),$(CROSSHATCH_KDEBUG_API)))
 ifeq ($(filter ok,$(_kdebug)),)
 $(error CROSSHATCH_KERNEL_DEBUG=$(CROSSHATCH_KERNEL_DEBUG): $(_kdebug))
 endif
