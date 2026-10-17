@@ -47,6 +47,13 @@ CROSSHATCH_KDEBUG_FRAG := $(TARGET_KERNEL_SOURCE)/arch/arm64/configs/crosshatch_
 # (DEBUG_SPINLOCK_PANIC_ON_BUG stays: it is a choice against a watchdog bite.)
 CROSSHATCH_KDEBUG_NOPANIC := CONFIG_PANIC_ON_WARN_DEFAULT_ENABLE=n \
     CONFIG_KASAN_PANIC_ON_WARN=n
+# debug_memory: report soft lockups, hung tasks, RT throttling and slab
+# corruption without panicking (slow debug kernels trip the first three
+# falsely, and an unclean reset left NUL-filled files under /data/adb).
+# Hard lockups and PANIC_ON_DATA_CORRUPTION still panic.
+CROSSHATCH_KDEBUG_NOPANIC += CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=n \
+    CONFIG_BOOTPARAM_HUNG_TASK_PANIC=n CONFIG_PANIC_ON_RT_THROTTLING=n \
+    CONFIG_SLUB_DEBUG_PANIC_ON=n
 # kasan: no DEBUG_INFO. With -g and -no-integrated-as, clang passes -g to GNU
 # as 2.27, which then makes its own line info for asan.module_ctor and takes
 # file number 1 before clang's ".file 1" in files that only hold tables
