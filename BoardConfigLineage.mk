@@ -47,11 +47,18 @@ CROSSHATCH_KDEBUG_FRAG := $(TARGET_KERNEL_SOURCE)/arch/arm64/configs/crosshatch_
 # (DEBUG_SPINLOCK_PANIC_ON_BUG stays: it is a choice against a watchdog bite.)
 CROSSHATCH_KDEBUG_NOPANIC := CONFIG_PANIC_ON_WARN_DEFAULT_ENABLE=n \
     CONFIG_KASAN_PANIC_ON_WARN=n
+# kasan: no DEBUG_INFO. With -g and -no-integrated-as, clang passes -g to GNU
+# as 2.27, which then makes its own line info for asan.module_ctor and takes
+# file number 1 before clang's ".file 1" in files that only hold tables
+# (sys32.c, security/keys/sysctl.c, rsapubkey-asn1.c...): "file number 1
+# already allocated". KASAN reports still carry kallsyms names + offsets.
+CROSSHATCH_KDEBUG_KASAN := CONFIG_DEBUG_INFO=n
 _kdebug := $(shell python3 device/google/crosshatch/kernel-debug/buildconfig2frag.py \
     $(TARGET_KERNEL_SOURCE)/build.config.bluecross_$(CROSSHATCH_KERNEL_DEBUG) $(CROSSHATCH_KDEBUG_FRAG) \
     $(if $(filter debug_%,$(CROSSHATCH_KERNEL_DEBUG)),CONFIG_DEBUG_FS=y) \
     $(if $(filter debug_locking,$(CROSSHATCH_KERNEL_DEBUG)),$(CROSSHATCH_KDEBUG_LOCKDEP)) \
-    $(CROSSHATCH_KDEBUG_NOPANIC))
+    $(CROSSHATCH_KDEBUG_NOPANIC) \
+    $(if $(filter kasan,$(CROSSHATCH_KERNEL_DEBUG)),$(CROSSHATCH_KDEBUG_KASAN)))
 ifeq ($(filter ok,$(_kdebug)),)
 $(error CROSSHATCH_KERNEL_DEBUG=$(CROSSHATCH_KERNEL_DEBUG): $(_kdebug))
 endif
