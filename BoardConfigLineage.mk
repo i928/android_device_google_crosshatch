@@ -45,7 +45,8 @@ CROSSHATCH_KDEBUG_FRAG := $(TARGET_KERNEL_SOURCE)/arch/arm64/configs/crosshatch_
 # WARN-level splat, so the phone died a minute after boot and the fastbootd
 # reflash then overwrote pstore. Keep the reports in dmesg instead.
 # (DEBUG_SPINLOCK_PANIC_ON_BUG stays: it is a choice against a watchdog bite.)
-CROSSHATCH_KDEBUG_NOPANIC := CONFIG_PANIC_ON_WARN_DEFAULT_ENABLE=n
+CROSSHATCH_KDEBUG_NOPANIC := CONFIG_PANIC_ON_WARN_DEFAULT_ENABLE=n \
+    CONFIG_KASAN_PANIC_ON_WARN=n
 _kdebug := $(shell python3 device/google/crosshatch/kernel-debug/buildconfig2frag.py \
     $(TARGET_KERNEL_SOURCE)/build.config.bluecross_$(CROSSHATCH_KERNEL_DEBUG) $(CROSSHATCH_KDEBUG_FRAG) \
     $(if $(filter debug_%,$(CROSSHATCH_KERNEL_DEBUG)),CONFIG_DEBUG_FS=y) \
