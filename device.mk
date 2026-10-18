@@ -739,3 +739,26 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Set system properties identifying the chipset
 PRODUCT_VENDOR_PROPERTIES += ro.soc.manufacturer=Qualcomm
 PRODUCT_VENDOR_PROPERTIES += ro.soc.model=SDM845
+
+# KernelSUNext's bundled libksud.so never gets extracted for a pre-baked
+# /product/app install (PackageManager only extracts lib/<abi>/*.so on a
+# normal /data/app install) -- the app's own code exec's a hardcoded path
+# expecting that extraction to have happened, so ship the binary as its own
+# copied file at that exact path instead. Soong prebuilt module types
+# (prebuilt_etc, prebuilt_root, cc_prebuilt_binary + relative_install_path)
+# all reject or can't express escaping to an arbitrary nested product path,
+# so this uses plain PRODUCT_COPY_FILES instead -- which requires
+# BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true, set in
+# BoardConfigLineage.mk (this flag is board-scoped, not product-scoped --
+# setting it here in device.mk is silently ignored by board_config.mk).
+# KernelSU-Next manager 3.4.2 (kernel driver 3.4.1 5a21ddac, UAPI 5): ksud and
+# libadbroot.so from the 3.4.2 manager, tracked in ksud_prebuilt/3.4.2/.
+# The manager runs `ksud install --libadbroot <nativeLibraryDir>/libadbroot.so`;
+# libadbroot.so is a shared library, not exec'd, so it needs no +x.
+# Only when the KernelSUNext app itself is being built (prebuilts/extra-apps);
+# BoardConfigLineage.mk's chmod stamp rule uses the same condition.
+ifneq ($(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/KernelSUNext.apk),)
+PRODUCT_COPY_FILES += \
+    device/google/crosshatch/ksud_prebuilt/3.4.2/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so \
+    device/google/crosshatch/ksud_prebuilt/3.4.2/libadbroot.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libadbroot.so
+endif
