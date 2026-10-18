@@ -848,3 +848,47 @@ PRODUCT_COPY_FILES += \
     device/google/crosshatch/ksud_prebuilt/3.4.2/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so \
     device/google/crosshatch/ksud_prebuilt/3.4.2/libadbroot.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libadbroot.so
 endif
+
+# KernelSU module autoinstall, ported from device/google/sunfish (its KSU.md has
+# the full setup). On a wiped device (fastboot -w) /data/adb is empty, so no
+# modules load; /product survives, so the ROM carries the zips and installs them.
+# ksu-autoinstall/ is untracked local content ($(wildcard) yields nothing when
+# it is absent, so a fresh tree still builds):
+#   ksu-autoinstall/NN-<name>.zip         installed or upgraded by version
+#   ksu-autoinstall/scripts/*.sh          boot scripts, run detached every boot
+#   ksu-autoinstall/*.allowlist           optional: apps granted root on a wipe
+#   ksu-autoinstall/snapshot/ksu-snapshot.tar.gz  optional finished install
+#     (make-snapshot.sh, tracked); its zips go in installed-in-snapshot/
+# CROSSHATCH_RELEASE=1 ships only what release.txt names, for each of these.
+# init.ksu-autoinstall.rc also seeds /data/adb/ksud and runs `ksud install`, so
+# KernelSU (and data-adb-seed's boot-completed.d scripts) work before the
+# manager is ever opened. Log: /data/adb/ksu-autoinstall.log.
+KSU_AUTOINSTALL_DIR := device/google/crosshatch/ksu-autoinstall
+KSU_AUTOINSTALL_ZIPS := $(wildcard $(KSU_AUTOINSTALL_DIR)/*.zip)
+KSU_AUTOINSTALL_ALLOWLIST := $(wildcard $(KSU_AUTOINSTALL_DIR)/*.allowlist)
+KSU_AUTOINSTALL_SCRIPTS := $(wildcard $(KSU_AUTOINSTALL_DIR)/scripts/*.sh)
+KSU_SNAPSHOT := $(wildcard $(KSU_AUTOINSTALL_DIR)/snapshot/ksu-snapshot.tar.gz)
+ifeq ($(CROSSHATCH_RELEASE),1)
+KSU_AUTOINSTALL_ZIPS := $(call crosshatch-release-filter,$(KSU_AUTOINSTALL_ZIPS))
+KSU_AUTOINSTALL_ALLOWLIST := $(call crosshatch-release-filter,$(KSU_AUTOINSTALL_ALLOWLIST))
+KSU_AUTOINSTALL_SCRIPTS := $(call crosshatch-release-filter,$(KSU_AUTOINSTALL_SCRIPTS))
+KSU_SNAPSHOT := $(call crosshatch-release-filter,$(KSU_SNAPSHOT))
+endif
+PRODUCT_COPY_FILES += \
+    $(foreach z,$(KSU_AUTOINSTALL_ZIPS),\
+        $(z):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/$(notdir $(z))) \
+    $(foreach a,$(KSU_AUTOINSTALL_ALLOWLIST),\
+        $(a):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/$(notdir $(a))) \
+    $(foreach s,$(KSU_AUTOINSTALL_SCRIPTS),\
+        $(s):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/scripts/$(notdir $(s))) \
+    $(foreach t,$(KSU_SNAPSHOT),\
+        $(t):$(TARGET_COPY_OUT_PRODUCT)/etc/ksu-autoinstall/$(notdir $(t))) \
+    device/google/crosshatch/ksu-snapshot.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/bin/ksu-snapshot.sh \
+    device/google/crosshatch/ksu-autoinstall.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/bin/ksu-autoinstall.sh \
+    device/google/crosshatch/init.ksu-autoinstall.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.ksu-autoinstall.rc
+
+# One reboot after installing so the modules go live. A persist. default in
+# build.prop applies only while /data/property is empty, i.e. after a wipe.
+# Turn off with: setprop persist.ksu_ai_reboot 0
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.ksu_ai_reboot=1

@@ -1,1 +1,7 @@
 edk2
+# Local KernelSU module zips/scripts/allowlist/snapshot (see device.mk); only
+# make-snapshot.sh is tracked.
+ksu-autoinstall/*
+!ksu-autoinstall/snapshot/
+ksu-autoinstall/snapshot/*
+!ksu-autoinstall/snapshot/make-snapshot.sh
