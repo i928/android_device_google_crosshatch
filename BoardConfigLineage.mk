@@ -25,11 +25,9 @@ ifneq ($(PRODUCT_USE_DYNAMIC_PARTITIONS), true)
 endif
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := erofs
 
-# Reserve space for gapps install
--include vendor/lineage/config/BoardConfigReservedSize.mk
-ifneq ($(WITH_GMS),true)
-BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 1069547520
-endif
+# No GApps reserve: product is EROFS (read-only) and GApps are built in, so
+# nothing can be installed into it after the ROM.
+WITHOUT_RESERVED_SIZE := true
 
 # SELinux
 BOARD_SEPOLICY_DIRS += device/google/crosshatch/sepolicy-lineage/dynamic
