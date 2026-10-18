@@ -71,7 +71,15 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 # product-config-parse time; BoardConfigLineage.mk runs later and is fine).
 # Same condition as the libksud.so PRODUCT_COPY_FILES in device.mk: without
 # the app there is no copied file, so no rule may depend on it.
-ifneq ($(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/KernelSUNext.apk),)
+# Board config cannot see device.mk's app list, so repeat its decision: the app
+# ships unless a release build past the transition leaves it out of release.txt.
+CROSSHATCH_KSU_APP := $(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/KernelSUNext.apk)
+ifeq ($(CROSSHATCH_RELEASE)$(or $(CROSSHATCH_RELEASE_TRANSITION),1),10)
+ifeq ($(filter KernelSUNext,$(shell sed -e 's/#.*//' device/google/crosshatch/release.txt 2>/dev/null)),)
+CROSSHATCH_KSU_APP :=
+endif
+endif
+ifneq ($(CROSSHATCH_KSU_APP),)
 libksud_chmod_stamp := $(OUT_DIR)/libksud_chmod.stamp
 $(libksud_chmod_stamp): $(PRODUCT_OUT)/$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so
 	chmod 755 $<

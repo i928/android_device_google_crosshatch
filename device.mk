@@ -852,9 +852,9 @@ PRODUCT_PACKAGES += $(foreach apk,$(USER_INSTALL_APKS),userapp_$(basename $(notd
 # libadbroot.so from the official 3.4.2 manager (33355), in ksud_prebuilt/3.4.2/.
 # The manager runs `ksud install --libadbroot <nativeLibraryDir>/libadbroot.so`;
 # libadbroot.so is a shared library, not exec'd, so it needs no +x.
-# Only when the KernelSUNext app itself is being built (prebuilts/extra-apps);
-# BoardConfigLineage.mk's chmod stamp rule uses the same condition.
-ifneq ($(wildcard device/google/crosshatch/prebuilts/extra-apps/prebuilt/KernelSUNext.apk),)
+# Only when the KernelSUNext app itself ships (extra-apps, after the release
+# filter); BoardConfigLineage.mk's chmod stamp rule uses the same condition.
+ifneq ($(filter %/KernelSUNext.apk,$(USER_APPS_BP)),)
 PRODUCT_COPY_FILES += \
     device/google/crosshatch/ksud_prebuilt/3.4.2/libksud.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libksud.so \
     device/google/crosshatch/ksud_prebuilt/3.4.2/libadbroot.so:$(TARGET_COPY_OUT_PRODUCT)/app/KernelSUNext/lib/arm64/libadbroot.so
@@ -903,6 +903,13 @@ PRODUCT_COPY_FILES += \
 # Turn off with: setprop persist.ksu_ai_reboot 0
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.ksu_ai_reboot=1
+
+# Release builds: the official KernelSU-Next manager (ksu-official/), installed
+# as a normal user app after setup by install-apps.sh, so it keeps its official
+# signature and updates itself. No manager is baked into /product.
+ifeq ($(CROSSHATCH_RELEASE),1)
+PRODUCT_PACKAGES += ksu_official_manager
+endif
 
 # ksud for init.ksu-autoinstall.rc, independent of any manager app: KernelSU
 # needs /data/adb/ksud from the first boot, before a manager is opened, and
