@@ -1,0 +1,15 @@
+# The KernelSU-Next manager (dev.i928.mgr) spawns its bundled libksud.so while
+# still in the untrusted_app domain, and that probes /data/local/tests before
+# escalating. The path is not KSU's own -- nothing in the driver, ksud or the
+# manager sources references it -- and nothing depends on the result: root,
+# module listing and the superuser list all work with the search denied. It is
+# pure log noise, 12 lines every time the app is opened:
+#
+#   avc: denied { search } for name="tests"
+#     scontext=u:r:untrusted_app:s0:c128,c257,c512,c768
+#     tcontext=u:object_r:shell_test_data_file:s0 tclass=dir
+#     permissive=0 app=dev.i928.mgr
+#
+# dontaudit, not allow: untrusted_app has no business reading shell test data,
+# and silencing the audit does not grant the access.
+dontaudit untrusted_app shell_test_data_file:dir search;
