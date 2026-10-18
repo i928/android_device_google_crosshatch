@@ -1,0 +1,16 @@
+# KSU systemless-modules overlay: the kernel loop-mounts
+# /data/adb/overlayfs/overlayfs.img (labeled adb_data_file), so the loop worker
+# thread does both the reads AND the writes for that image from the kernel
+# domain. With read only, the image mounts but every writeback fails; the loop
+# driver can only report that as a block error, so it shows up as I/O errors on
+# a healthy flash device, aborts the image's journal and remounts the overlay
+# read-only (sunfish, 2026-09-12):
+#
+#   avc: denied { write } for path="/data/adb/overlayfs/overlayfs.img"
+#     scontext=u:r:kernel:s0 tcontext=u:object_r:adb_data_file:s0 tclass=file
+#   loop: Write error at byte offset 2015371264, length 4096.
+#   JBD2: Error -5 detected when updating journal superblock for loop43-8.
+#
+# adb_data_file is a public type and kernel a coredomain, so this lives in
+# system_ext/private (plat side) rather than vendor sepolicy.
+allow kernel adb_data_file:file rw_file_perms;
