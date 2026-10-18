@@ -38,5 +38,21 @@ $(call inherit-product, vendor/google/crosshatch/crosshatch-vendor.mk)
 PRODUCT_COMPRESSED_APEX := false
 
 # MindTheGapps, baked in: with system_ext and product on EROFS nothing can
-# be flashed into them after the ROM.
+# be flashed into them after the ROM. CROSSHATCH_GAPPS picks the set, e.g.
+#   CROSSHATCH_GAPPS=none m bacon
+#   full  (default) the whole MindTheGapps set
+#   mini  MindTheGapps' own reduced set (TARGET_IS_GROUPER): no SetupWizard,
+#         GoogleRestore, Wellbeing, Velvet (Google app), Markup, Speech
+#         Services or TalkBack -- setup runs without Google's wizard, so no
+#         restore from a Google backup during setup
+#   none  no Google apps at all (de-Googled build)
+CROSSHATCH_GAPPS ?= full
+ifeq ($(filter full mini none,$(CROSSHATCH_GAPPS)),)
+$(error CROSSHATCH_GAPPS=$(CROSSHATCH_GAPPS): use full, mini or none)
+endif
+ifneq ($(CROSSHATCH_GAPPS),none)
+ifeq ($(CROSSHATCH_GAPPS),mini)
+TARGET_IS_GROUPER := true
+endif
 $(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
+endif
