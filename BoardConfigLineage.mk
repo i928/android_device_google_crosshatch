@@ -17,6 +17,13 @@ TARGET_KERNEL_ADDITIONAL_FLAGS := LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
 TARGET_KERNEL_SOURCE := kernel/google/msm-4.9
 TARGET_NEEDS_DTBOIMAGE := true
 
+# Bootanimation: LineageOS' generated 1440-wide animation with the loop (part1) and
+# outro (part2) changed from "c" (always played to the end) to "p", so they stop once boot
+# is done instead of holding sys.boot_completed (part1 loop 1.4 s, outro ~3.5 s).
+# Rename the zip whenever its content changes: vendor/lineage's genrule copies it by
+# path from its cmd without declaring it as an input, so only a new path reruns it.
+TARGET_BOOTANIMATION := device/google/crosshatch/bootanimation/bootanimation-p1p2.zip
+
 # Partitions
 AB_OTA_PARTITIONS += \
     vendor
