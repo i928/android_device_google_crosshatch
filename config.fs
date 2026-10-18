@@ -26,6 +26,14 @@ value:2903
 [AID_VENDOR_RFS_SHARED]
 value:2904
 
+# ksud seeded by init.ksu-autoinstall.rc (see device.mk), exec'd from there by
+# `ksud install`, so it must keep its +x bit in the image.
+[system_ext/etc/ksu/ksud]
+mode: 0755
+user: AID_ROOT
+group: AID_ROOT
+caps: 0
+
 [product/app/KernelSUNext/lib/arm64/libksud.so]
 mode: 0755
 user: AID_ROOT
