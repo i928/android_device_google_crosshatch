@@ -688,10 +688,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/thermal_info_config_$(PRODUCT_HARDWARE).json:$(TARGET_COPY_OUT_VENDOR)/etc/thermal_info_config.json \
     $(LOCAL_PATH)/thermal_info_config_$(PRODUCT_HARDWARE)_evt.json:$(TARGET_COPY_OUT_VENDOR)/etc/thermal_info_config_evt.json
 
-# powerstats HAL
-PRODUCT_PACKAGES += \
-    android.hardware.power.stats@1.0-service.pixel
-
 # SurfaceFlinger
 
 # Graphics
