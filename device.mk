@@ -424,7 +424,10 @@ PRODUCT_PACKAGES += \
 
 # Context hub HAL
 PRODUCT_PACKAGES += \
-    android.hardware.contexthub@1.2-service.generic
+    android.hardware.contexthub-service.generic
+
+PRODUCT_SOONG_NAMESPACES += \
+    system/chre/host/hal_generic
 
 # Boot control HAL
 PRODUCT_PACKAGES += \
