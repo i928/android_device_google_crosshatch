@@ -254,9 +254,6 @@ on post-fs
     write /sys/module/drm/parameters/vblankoffdelay -1
 
 on post-fs-data
-    # We can start netd here before in is launched in common init.rc on zygote-start
-    start netd
-
     # b/38048356 Setup debug folders for camera
     mkdir /data/vendor/camera 0770 camera camera
 
