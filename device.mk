@@ -329,7 +329,7 @@ PRODUCT_PACKAGES += \
 
 # Storage health HAL
 PRODUCT_PACKAGES += \
-    android.hardware.health.storage@1.0-service
+    android.hardware.health.storage-service.default
 
 # Light HAL
 PRODUCT_PACKAGES += \
