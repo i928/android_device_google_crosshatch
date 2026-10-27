@@ -196,13 +196,22 @@
             <instance>slot1</instance>
         </interface>
     </hal>
-    <!-- HIDL 1.0 services still shipped by this device; dropped from the
-         A16 framework matrices along with FCM level 5. -->
+    <!-- HIDL services still shipped by this device that the A16 framework
+         matrices at its FCM level (7) no longer list: the Qualcomm sdm845
+         GNSS stack only implements 1.1, and lights are the HIDL 2.0 HAL. -->
     <hal format="hidl" optional="true">
-        <name>android.hardware.health.storage</name>
-        <version>1.0</version>
+        <name>android.hardware.gnss</name>
+        <version>1.1</version>
         <interface>
-            <name>IStorage</name>
+            <name>IGnss</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl" optional="true">
+        <name>android.hardware.light</name>
+        <version>2.0</version>
+        <interface>
+            <name>ILight</name>
             <instance>default</instance>
         </interface>
     </hal>
