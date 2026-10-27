@@ -120,3 +120,6 @@ bluetooth.profile.sap.server.enabled?=true
 ## Disable touch heatmap
 #
 ro.input.video_enabled=false
+
+# eBPF: load the 5.10 program variants (the bpf3 kernel has the hooks; same as sunfish)
+ro.bpf.kver_override=5.10.239
