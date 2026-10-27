@@ -1,0 +1,19 @@
+# Charger mode runs the health HAL (android.hardware.health-service.crosshatch --charger)
+# in charger_vendor, so it needs the same battery paths as hal_health_default.
+r_dir_file(charger_vendor, sysfs_msm_subsys)
+allow charger_vendor sysfs_wlc:dir r_dir_perms;
+allow charger_vendor persist_file:dir search;
+allow charger_vendor persist_battery_file:file create_file_perms;
+allow charger_vendor persist_battery_file:dir rw_dir_perms;
+allow charger_vendor mnt_vendor_file:dir search;
+allow charger_vendor sysfs_batteryinfo:dir search;
+allow charger_vendor sysfs_batteryinfo:file rw_file_perms;
+allow charger_vendor sysfs_thermal:dir r_dir_perms;
+allow charger_vendor sysfs_thermal:file rw_file_perms;
+allow charger_vendor sysfs_chargelevel:file rw_file_perms;
+
+get_prop(charger_vendor, vendor_shutdown_prop)
+set_prop(charger_vendor, vendor_shutdown_prop)
+set_prop(charger_vendor, vendor_battery_defender_prop)
+
+allow charger_vendor self:capability2 wake_alarm;

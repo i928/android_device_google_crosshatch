@@ -20,7 +20,7 @@
 #include <android-base/file.h>
 #include <android-base/logging.h>
 #include <android-base/strings.h>
-#include <batteryservice/BatteryService.h>
+#include <aidl/android/hardware/health/HealthInfo.h>
 #include <math.h>
 #include <time.h>
 #include <utils/Timers.h>
@@ -61,7 +61,7 @@ struct sysfsStringEnumMap {
 class BatteryRechargingControl {
   public:
     BatteryRechargingControl();
-    void updateBatteryProperties(struct android::BatteryProperties *props);
+    void updateBatteryProperties(aidl::android::hardware::health::HealthInfo *health_info);
 
   private:
     enum RechargeState state_;
@@ -70,7 +70,7 @@ class BatteryRechargingControl {
     int recharge_soc_;
 
     int mapSysfsString(const char *str, struct sysfsStringEnumMap map[]);
-    int getBatteryStatus(const char *status);
+    aidl::android::hardware::health::BatteryStatus getBatteryStatus(const char *status);
     int RemapSOC(int);
     int64_t getTime();
 };

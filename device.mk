@@ -324,8 +324,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Health HAL
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.1-impl-crosshatch \
-    android.hardware.health@2.1-service
+    android.hardware.health-service.crosshatch \
+    android.hardware.health-service.crosshatch_recovery
 
 # Storage health HAL
 PRODUCT_PACKAGES += \
