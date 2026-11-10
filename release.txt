@@ -28,3 +28,8 @@ AuroraStore
 MicroG
 Gboard
 privapp-permissions-gboard.xml
+# Current Play versions of Google system apps (FeliCa, Carrier Services, eSIM,
+# Android Auto, ...) replacing the ROM's older copies (overrides). Must ship:
+# the ROM copy is gone, so leaving them out of a transition build would hide
+# the app itself. Includes privapp-permissions-SysUpd.xml.
+SysUpd
