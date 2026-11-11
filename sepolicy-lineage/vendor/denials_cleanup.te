@@ -1,0 +1,18 @@
+# Denials seen on every boot (2026-11, msm-4.9 and msm-4.14).
+
+# The sensors HAL sets options (receive timeout) on the IPC router/QRTR
+# sockets it talks to the SLPI over:
+#   avc: denied { setopt } scontext=u:r:hal_sensors_default:s0
+#        tcontext=u:r:hal_sensors_default:s0 tclass=socket
+allow hal_sensors_default self:socket setopt;
+
+# init.rc caps discards at 128M per request:
+#   write /dev/sys/block/by-name/userdata/queue/discard_max_bytes 134217728
+#   avc: denied { write } name="discard_max_bytes" scontext=u:r:init:s0
+#        tcontext=u:object_r:sysfs_scsi_devices_0000:s0 tclass=file
+# Same rule as device/google/sunfish.
+allow init sysfs_scsi_devices_0000:file w_file_perms;
+
+# init.qcom.devstart.sh runs `find` over /sys/devices/soc0 and only stats the
+# serial number on the way; it never reads it.
+dontaudit init-qcom-devstart-sh sysfs_soc_sensitive:file getattr;
