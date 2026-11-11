@@ -14,7 +14,15 @@ TARGET_KERNEL_LLVM_BINUTILS := false
 # ld.lld for the LTO link (4.9 kernel branch clang23-lld-lto: Clang 23 ships no
 # LLVMgold.so for gold). Only LD: LLVM_BINUTILS would also force LLVM=1 LLVM_IAS=1.
 TARGET_KERNEL_ADDITIONAL_FLAGS := LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
-TARGET_KERNEL_SOURCE := kernel/google/msm-4.9
+TARGET_KERNEL_SOURCE := kernel/google/msm-4.14-b1c1
+# msm-4.14: boot.img carries only the sdm845 v2.1 base dtb (the board parts are
+# in the dtbo), and dtbo.img is built from dtbo-4.14.cfg (4.9's kernel built its
+# own dtbo.img from dtboimg.cfg; 4.14's has no board ids).
+TARGET_DTB_LIST_WILDCARD := google/qcom-base/sdm845-v2.1
+BOARD_KERNEL_SEPARATED_DTBO := true
+BOARD_DTBO_CFG := device/google/crosshatch/dtbo-4.14.cfg
+# Every 4.14 test image booted with these two; never tested without.
+BOARD_KERNEL_CMDLINE += clk_ignore_unused log_buf_len=8M
 TARGET_NEEDS_DTBOIMAGE := true
 
 # Bootanimation: LineageOS' generated 1440-wide animation with the loop (part1) and

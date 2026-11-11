@@ -48,6 +48,8 @@ genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_rotator                  
 genfscon sysfs /devices/platform/soc/894000.i2c/i2c-3/3-0043/leds                u:object_r:sysfs_leds:s0
 genfscon sysfs /devices/platform/soc/894000.i2c/i2c-3/3-005a/leds                u:object_r:sysfs_leds:s0
 genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display@4/backlight            u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display@4/backlight/panel0-backlight/vr_mode   u:object_r:sysfs_lights:s0
+genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display@4/panel_info          u:object_r:sysfs_display:s0
 genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display@51/backlight           u:object_r:sysfs_leds:s0
 genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display@51/backlight/panel0-backlight/vr_mode   u:object_r:sysfs_lights:s0
 genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display@51/panel_info          u:object_r:sysfs_display:s0
