@@ -1,0 +1,18 @@
+# zram writeback: fs_mgr (init) creates /data/per_boot/zram_swap, pins it and
+# hands it to zram through a loop device (fstab zram_backingdev_size). The
+# loop thread reads it as the kernel domain. Without a label of its own the
+# file is system_data_file, the kernel is denied
+#   avc: denied { read } for comm="loop40" path="/data/per_boot/zram_swap"
+#        scontext=u:r:kernel:s0 tcontext=u:object_r:system_data_file:s0
+# and nothing is ever written back (bd_stat stays 0). Same rules as
+# device/google/sunfish.
+type per_boot_file, file_type, data_file_type, core_data_file_type;
+
+allow kernel per_boot_file:file r_file_perms;
+
+allow init per_boot_file:file ioctl;
+allowxperm init per_boot_file:file ioctl { F2FS_IOC_SET_PIN_FILE };
+
+# init.rc: rm -rf /data/per_boot on every boot
+allow toolbox per_boot_file:dir create_dir_perms;
+allow toolbox per_boot_file:file create_file_perms;
