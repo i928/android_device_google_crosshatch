@@ -9,6 +9,8 @@ on post-fs-data
 
     copy /system_ext/etc/data-adb-seed/boot-completed.d/daily_clean_timer.sh /data/adb/boot-completed.d/daily_clean_timer.sh
     chmod 0755 /data/adb/boot-completed.d/daily_clean_timer.sh
+    copy /system_ext/etc/data-adb-seed/boot-completed.d/shizuku_dedup.sh /data/adb/boot-completed.d/shizuku_dedup.sh
+    chmod 0755 /data/adb/boot-completed.d/shizuku_dedup.sh
 
     # Leftovers of the crond setup (crond ran daily_clean.sh and
     # f2fs_compress.sh); daily_clean_timer.sh replaced it, as on sunfish.
