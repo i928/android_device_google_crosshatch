@@ -15,6 +15,9 @@ on post-fs-data
     copy /system_ext/etc/data-adb-seed/boot-completed.d/release_hide_apps.sh /data/adb/boot-completed.d/release_hide_apps.sh
     chmod 0755 /data/adb/boot-completed.d/release_hide_apps.sh
 
+    copy /system_ext/etc/data-adb-seed/boot-completed.d/felica_hide.sh /data/adb/boot-completed.d/felica_hide.sh
+    chmod 0755 /data/adb/boot-completed.d/felica_hide.sh
+
     # Leftovers of the crond setup (crond ran daily_clean.sh and
     # f2fs_compress.sh); daily_clean_timer.sh replaced it, as on sunfish.
     # Copies here never delete, so remove the old files once.

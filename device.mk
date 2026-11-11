@@ -46,7 +46,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/data-adb-seed/boot-completed.d/daily_clean_timer.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/daily_clean_timer.sh \
     $(LOCAL_PATH)/data-adb-seed/boot-completed.d/shizuku_dedup.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/shizuku_dedup.sh \
     $(LOCAL_PATH)/data-adb-seed/boot-completed.d/revanced_yt_client.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/revanced_yt_client.sh \
-    $(LOCAL_PATH)/data-adb-seed/boot-completed.d/release_hide_apps.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/release_hide_apps.sh
+    $(LOCAL_PATH)/data-adb-seed/boot-completed.d/release_hide_apps.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/release_hide_apps.sh \
+    $(LOCAL_PATH)/data-adb-seed/boot-completed.d/felica_hide.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/felica_hide.sh
 
 # f2fs_io for /data/adb/daily_clean.sh (compress_mode=user)
 PRODUCT_PACKAGES += \
@@ -885,6 +886,13 @@ KSU_AUTOINSTALL_ZIPS := $(call crosshatch-release-filter,$(KSU_AUTOINSTALL_ZIPS)
 KSU_AUTOINSTALL_ALLOWLIST := $(call crosshatch-release-filter,$(KSU_AUTOINSTALL_ALLOWLIST))
 KSU_AUTOINSTALL_SCRIPTS := $(call crosshatch-release-filter,$(KSU_AUTOINSTALL_SCRIPTS))
 KSU_SNAPSHOT := $(call crosshatch-release-filter,$(KSU_SNAPSHOT))
+# The snapshot is a personal install (its modules, their settings, root
+# grants) and stays out of a release. Its modules that release.txt names must
+# then ship as zips instead, or the release has no ReZygisk, susfs, ...: take
+# them from installed-in-snapshot/, skipping any already in the top folder.
+KSU_AUTOINSTALL_ZIPS += $(foreach z,\
+    $(call crosshatch-release-filter,$(wildcard $(KSU_AUTOINSTALL_DIR)/installed-in-snapshot/*.zip)),\
+    $(if $(filter $(notdir $(z)),$(notdir $(KSU_AUTOINSTALL_ZIPS))),,$(z)))
 endif
 PRODUCT_COPY_FILES += \
     $(foreach z,$(KSU_AUTOINSTALL_ZIPS),\
