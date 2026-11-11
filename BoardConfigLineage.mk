@@ -15,6 +15,11 @@ TARGET_KERNEL_LLVM_BINUTILS := false
 # LLVMgold.so for gold). Only LD: LLVM_BINUTILS would also force LLVM=1 LLVM_IAS=1.
 TARGET_KERNEL_ADDITIONAL_FLAGS := LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
 TARGET_KERNEL_SOURCE := kernel/google/msm-4.14-b1c1
+# Userspace is built against msm-4.9's UAPI headers: the vendor blobs (camera, codec,
+# audio ACDB...) and the ported b1c1 drivers (camera, vidc, audio, legacy ION) keep the
+# 4.9 ABI. Built against 4.14 headers, gralloc sized video buffers differently and the
+# encoder rejected them (no recording), and audio start was slow.
+TARGET_KERNEL_HEADERS_SOURCE := kernel/google/msm-4.9
 # msm-4.14: boot.img carries only the sdm845 v2.1 base dtb (the board parts are
 # in the dtbo), and dtbo.img is built from dtbo-4.14.cfg (4.9's kernel built its
 # own dtbo.img from dtboimg.cfg; 4.14's has no board ids).
