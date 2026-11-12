@@ -446,9 +446,11 @@ if [ "$zip_installed" -gt 0 ] &&
 		sleep 3
 	done
 	log "[SETUP DONE] Setup Wizard complete."
-	cmd notification post -S bigtext -t "Restarting in 15 seconds" \
-		ksu-autoinstall "One restart to finish installing the KernelSU modules." \
-		> /dev/null 2>&1
+	# Logged either way: on the first wipe test nobody saw it, and without
+	# the result there was no telling whether it had been posted.
+	nout=$(cmd notification post -S bigtext -t "Restarting in 15 seconds" \
+		ksu-autoinstall "One restart to finish installing the KernelSU modules." 2>&1)
+	log "[NOTIFY] restart notice: rc=$? ${nout:-(no output)}"
 	sleep 15
 	: > "$STATE/.rebooted"
 	# Setup is already finished, so the next boot is a normal full boot with
