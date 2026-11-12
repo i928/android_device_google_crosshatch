@@ -269,6 +269,9 @@ rm -f "$OUT"
 # ksu-snapshot.sh staged the ROM's module snapshot at post-fs-data this boot,
 # the same state zip installs leave: they go live on the next boot, so count
 # them as installed and take the same single reboot below.
+# Zips installed this boot, before the snapshot is counted: installing them
+# takes a minute or more, which decides how the reboot below is timed.
+zip_installed=$installed
 if [ -f "$STATE/snapshot.reboot" ]; then
 	rm -f "$STATE/snapshot.reboot"
 	n=$(ls /data/adb/modules_update 2>/dev/null | wc -l)
@@ -428,6 +431,35 @@ fi
 while [ "$(getprop sys.boot_completed)" != "1" ]; do
     sleep 2
 done
+
+# A snapshot is staged at post-fs-data, so the reboot comes while setup wizard
+# still shows its first page. Zip installs (a release build has no snapshot)
+# finish a minute or more into the wizard: the reboot then threw the user out
+# after the Wi-Fi step and the wizard asked for it again (2026-11-11). In that
+# case wait for setup to finish, say what is about to happen, then reboot.
+# .rebooted is written only then, so a reboot by the user in between does not
+# use up the one automatic reboot (the modules are active after it anyway).
+if [ "$zip_installed" -gt 0 ] &&
+   [ "$(settings get global device_provisioned 2>/dev/null)" != "1" ]; then
+	log "[WAITING] $zip_installed module zip(s) installed during setup; rebooting once Setup Wizard is finished."
+	while [ "$(settings get global device_provisioned 2>/dev/null)" != "1" ]; do
+		sleep 3
+	done
+	log "[SETUP DONE] Setup Wizard complete."
+	cmd notification post -S bigtext -t "Restarting in 15 seconds" \
+		ksu-autoinstall "One restart to finish installing the KernelSU modules." \
+		> /dev/null 2>&1
+	sleep 15
+	: > "$STATE/.rebooted"
+	# Setup is already finished, so the next boot is a normal full boot with
+	# the modules active: no zygote restart after the wizard is needed (that
+	# is for the reboot-before-setup path above), and one right after boot
+	# would only blank the screen.
+	: > "$STATE/.zygote_restarted"
+	log "[REBOOT CMD] Full reboot to activate $installed module(s) (after setup wizard)!"
+	setprop sys.powerctl reboot,ksu-autoinstall
+	exit 0
+fi
 
 : > "$STATE/.rebooted"
 log "[REBOOT CMD] Full reboot to activate $installed module(s) (not waiting for setup wizard)!"
