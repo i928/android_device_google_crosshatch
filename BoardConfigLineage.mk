@@ -26,8 +26,9 @@ TARGET_KERNEL_HEADERS_SOURCE := kernel/google/msm-4.9
 TARGET_DTB_LIST_WILDCARD := google/qcom-base/sdm845-v2.1
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_DTBO_CFG := device/google/crosshatch/dtbo-4.14.cfg
-# Every 4.14 test image booted with these two; never tested without.
-BOARD_KERNEL_CMDLINE += clk_ignore_unused log_buf_len=8M
+# clk_ignore_unused (bring-up leftover) is gone: it kept unused clocks running in
+# suspend (overnight 47 mA; 36 mA without it, same kernel, 2026-11-12).
+BOARD_KERNEL_CMDLINE += log_buf_len=8M
 TARGET_NEEDS_DTBOIMAGE := true
 
 # Bootanimation: LineageOS' generated 1440-wide animation with the loop (part1) and
