@@ -18,7 +18,7 @@ START_TIME=$(date +%s)
 # Compression is a switch: the "F2FS App Compression" KernelSU module
 # (id f2fs_compress) enabled = compress with lz4 (lz4hc level 9 with the
 # compress_algorithm=lz4:9 fstab); disabled or not installed = keep /data/app
-# plain. Apps listed in Download/F2FSCompressed/non-compression.txt are never
+# plain; enabled and on Hold (its Action button) = leave every file as it is. Apps listed in Download/F2FSCompressed/non-compression.txt are never
 # compressed. Files in the wrong state (zstd from older builds, compressed
 # while the switch is off or the app is listed) are converted on the next run.
 #
@@ -203,9 +203,15 @@ fi
 # MiB/s on a big core), and the space saved is about 0.6-0.9 GB.
 # ---------------------------------------------------------------------
 COMPRESS_MODULE="/data/adb/modules/f2fs_compress"
+# A first install waits in modules_update until the next boot, with its
+# disable flag there: do not read that as "on".
 if [ -d "$COMPRESS_MODULE" ] && [ ! -f "$COMPRESS_MODULE/disable" ] &&
-   [ ! -f "$COMPRESS_MODULE/remove" ]; then
+   [ ! -f "$COMPRESS_MODULE/remove" ] &&
+   [ ! -f /data/adb/modules_update/f2fs_compress/disable ]; then
     COMPRESS=on
+    # Hold (module v1.1, switched with its Action button): leave every file
+    # as it is until it is switched back.
+    [ -f "$COMPRESS_MODULE/hold" ] && COMPRESS=hold
 else
     COMPRESS=off
 fi
@@ -231,15 +237,19 @@ NOCOMP=" $(sed 's/#.*//' "$NOCOMP_LIST" | tr -s ' \t\r' '\n' | grep -v '^$' | tr
 # /data/app is compressed or converted back this run; the rest of the daily
 # job (cache trim, Phase 1b) has already run. Used up by this run.
 SKIP_ONCE="$LOG_DIR/skip-once"
-if [ -e "$SKIP_ONCE" ]; then
-    rm -f "$SKIP_ONCE"
+if [ "$COMPRESS" = hold ] || [ -e "$SKIP_ONCE" ]; then
     {
-        echo "[SKIPPED] Compression pass skipped once (skip-once file); /data/app left as it is."
-        echo ">> Compression switch: $COMPRESS (applies again from the next run)"
+        if [ "$COMPRESS" = hold ]; then
+            echo "[HOLD] Compression pass not run (module f2fs_compress on Hold); /data/app left as it is."
+        else
+            echo "[SKIPPED] Compression pass skipped once (skip-once file); /data/app left as it is."
+            echo ">> Compression switch: $COMPRESS (applies again from the next run)"
+        fi
         echo ">> Moved Back to ROM Copy: $reverted_count"
         [ -f "$REVERT_DIR/moved" ] && cat "$REVERT_DIR/moved"
         echo "--------------------------------------------------------"
     } | tee -a "$LOG_FILE"
+    rm -f "$SKIP_ONCE"
     rm -rf "$REVERT_DIR"
     am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE \
         -d "file:///storage/emulated/0/${LOG_FILE#/data/media/0/}" >/dev/null 2>&1
