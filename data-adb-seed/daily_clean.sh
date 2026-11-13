@@ -45,6 +45,13 @@ if [ -z "$FORCE" ]; then
     [ "$CURRENT_HOUR" -ge 4 ] && [ "$CURRENT_HOUR" -lt 9 ] || exit 0
     [ "$(cat "$STAMP" 2>/dev/null)" = "$TODAY" ] && exit 0
 fi
+# Not before the first unlock after boot: until then /data/media/0 has no
+# readable names (CE storage), so the log, non-compression.txt and skip-once
+# are out of reach, and every command that appends its errors to the log is
+# not even started by the shell. A run in that state released nothing and
+# filled the skip list with 411 compressible files (sunfish, 2026-11-12).
+# No stamp is written, so the timer's next call tries again.
+[ -d /data/media/0/Download ] || exit 0
 echo "$TODAY" > "$STAMP"
 
 # Keep the CPU awake for the whole run; without a wake lock a 12-minute
