@@ -22,6 +22,10 @@ START_TIME=$(date +%s)
 # compressed. Files in the wrong state (zstd from older builds, compressed
 # while the switch is off or the app is listed) are converted on the next run.
 #
+# To skip the compression pass once (say, before a battery test), create an
+# empty file Download/F2FSCompressed/skip-once: the next run leaves /data/app
+# as it is, in either direction, and removes the file.
+#
 # The log keeps one summary per run, then one short line per file compressed
 # (package/file, e.g. com.android.vending/base.apk; no /data/app path), plus
 # real failures.
@@ -222,6 +226,25 @@ EOF
     chmod 664 "$NOCOMP_LIST"
 fi
 NOCOMP=" $(sed 's/#.*//' "$NOCOMP_LIST" | tr -s ' \t\r' '\n' | grep -v '^$' | tr '\n' ' ') "
+
+# One-run skip: Download/F2FSCompressed/skip-once (any content). Nothing in
+# /data/app is compressed or converted back this run; the rest of the daily
+# job (cache trim, Phase 1b) has already run. Used up by this run.
+SKIP_ONCE="$LOG_DIR/skip-once"
+if [ -e "$SKIP_ONCE" ]; then
+    rm -f "$SKIP_ONCE"
+    {
+        echo "[SKIPPED] Compression pass skipped once (skip-once file); /data/app left as it is."
+        echo ">> Compression switch: $COMPRESS (applies again from the next run)"
+        echo ">> Moved Back to ROM Copy: $reverted_count"
+        [ -f "$REVERT_DIR/moved" ] && cat "$REVERT_DIR/moved"
+        echo "--------------------------------------------------------"
+    } | tee -a "$LOG_FILE"
+    rm -rf "$REVERT_DIR"
+    am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE \
+        -d "file:///storage/emulated/0/${LOG_FILE#/data/media/0/}" >/dev/null 2>&1
+    exit 0
+fi
 
 # ---------------------------------------------------------------------
 # Phase 4: Per-file workloop (compress_mode=user)
