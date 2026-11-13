@@ -462,6 +462,13 @@ find "$MANAGED_DIR" -xdev -type f \( -name '*.so' -o -name '*.apk' \) -size +15k
                     c_count=0; r_total=0
                     [ -f "$TALLY" ] && read -r c_count r_total < "$TALLY"
                     echo "$((c_count + 1)) $((r_total + released))" > "$TALLY"
+                    # A few blocks saved on a big file still fail the
+                    # "smaller on disk than its length" test above (st_blocks
+                    # counts the file's node blocks too), so the file came
+                    # back here every day: 9 APKs, 4-16 KiB each, rewritten
+                    # in full on every run (sunfish, 2026-11-12). Skip-list it.
+                    [ $(( $(stat -c %b "$file") * 512 )) -lt "$(stat -c %s "$file")" ] ||
+                        echo "$file" >> "$TMP_DIR/skip.new"
                     continue
                 fi
                 echo x >> "$TMP_DIR/einval"
