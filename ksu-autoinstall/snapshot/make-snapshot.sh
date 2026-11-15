@@ -23,7 +23,12 @@ TMP=/data/local/tmp/ksu-snapshot-build
 
 # Relative to /data/adb.
 INCLUDE="modules bindhosts susfs4ksu hybrid-mount/config.toml hybrid-mount/module_blacklist.toml
-post-fs-data.d/rezygisk.sh post-mount.d/rezygisk.sh boot-completed.d/hmaoss.sh metamodule"
+post-fs-data.d/rezygisk.sh post-mount.d/rezygisk.sh boot-completed.d/hmaoss.sh metamodule
+lowbatt.conf"
+
+# Modules whose installer leaves them disabled on a first install (opt-in):
+# their disable flag is the state to ship, not a pending change.
+DISABLED_OK="f2fs_compress lowbatt"
 
 # Runtime files inside module dirs, relative to /data/adb. .bootstrapped makes
 # AlwaysStrong skip its own first-boot Action; pif.prop/custom.pif.prop and the
@@ -57,9 +62,17 @@ $BB tar -cpf - $(echo $INCLUDE) | $BB tar -xpf - -C $TMP
 cd $TMP
 rm -rf $(echo $EXCLUDE)
 chown -R 0:0 tricky_store; chmod 755 tricky_store; chmod 644 tricky_store/*
-ls modules/*/update modules/*/disable modules/*/remove 2>/dev/null && { echo pending module state; exit 1; }
+ls modules/*/update modules/*/remove 2>/dev/null && { echo pending module state; exit 1; }
+# Opt-in modules ship disabled even when the source phone has them switched on.
+for m in $DISABLED_OK; do [ -d modules/\$m ] && touch modules/\$m/disable; rm -f modules/\$m/hold; done
+for d in modules/*/disable; do
+	[ -e \$d ] || continue
+	m=\${d#modules/}; m=\${m%/disable}
+	case \" $DISABLED_OK \" in *\" \$m \"*) ;; *) echo disabled module \$m; exit 1 ;; esac
+done
 # Labels from the live files; tricky_store is left to inherit adb_data_file.
-find $(echo $INCLUDE) | while read f; do echo \"\$(ls -dZ /data/adb/\$f | cut -d\" \" -f1) \$f\"; done > .ksu-snapshot-labels
+# A file made here (a disable flag) has no live twin: it takes the label of its directory.
+find $(echo $INCLUDE) | while read f; do l=/data/adb/\$f; [ -e \$l ] || [ -L \$l ] || l=\${l%/*}; echo \"\$(ls -dZ \$l | cut -d\" \" -f1) \$f\"; done > .ksu-snapshot-labels
 $BB tar -czpf /data/local/tmp/ksu-snapshot.tar.gz .ksu-snapshot-labels \$(ls -A | grep -v ^.ksu-snapshot-labels\$)
 cd /; rm -rf $TMP
 '"
