@@ -18,7 +18,10 @@ TARGET_KERNEL_ADDITIONAL_FLAGS := LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
 # KernelSU-Next takes its version name from `git describe --tags`, but repo
 # sync fetches no tags, so the manager showed v0.0.0. Pin the name.
 TARGET_KERNEL_ADDITIONAL_FLAGS += KSU_VERSION_TAG_OVERRIDE=v3.4.1
-TARGET_KERNEL_SOURCE := kernel/google/msm-4.14-b1c1
+# Same msm-4.14 checkout as sunfish (lineage-23.2_pr_pub_private): the b1c1 port is
+# in that line, and its KernelSU manager pin (dev.i928.mgr, cert e77745f9) matches
+# the KernelSUNext.apk this device ships in /product/app.
+TARGET_KERNEL_SOURCE := kernel/google/msm-4.14
 # Userspace is built against msm-4.9's UAPI headers: the vendor blobs (camera, codec,
 # audio ACDB...) and the ported b1c1 drivers (camera, vidc, audio, legacy ION) keep the
 # 4.9 ABI. Built against 4.14 headers, gralloc sized video buffers differently and the
