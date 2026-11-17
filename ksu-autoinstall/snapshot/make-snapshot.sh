@@ -34,7 +34,12 @@ DISABLED_OK="f2fs_compress lowbatt"
 # AlwaysStrong skip its own first-boot Action; pif.prop/custom.pif.prop and the
 # log are what that Action wrote on the source phone.
 EXCLUDE="modules/tricky_store/.bootstrapped modules/tricky_store/pif.prop
-modules/tricky_store/custom.pif.prop modules/tricky_store/logs"
+modules/tricky_store/custom.pif.prop modules/tricky_store/logs
+modules/bindhosts/system/etc/hosts"
+# bindhosts' hosts file is whatever the source phone last applied (AdAway wrote
+# 78k lines into it there): on a wiped phone that made bindhosts report "hosts
+# modified by Adaway". Its post-fs-data.sh rebuilds a missing one from the
+# ROM's /system/etc/hosts.
 
 # Modules installed on the source phone that must not ship, e.g. one being
 # tried out:  SNAPSHOT_SKIP="droidwin_keybox" ./make-snapshot.sh
