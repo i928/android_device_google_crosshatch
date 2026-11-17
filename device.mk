@@ -78,8 +78,8 @@ $(call inherit-product, $(LOCAL_PATH)/utils.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/developer_gsi_keys.mk)
 
 PRODUCT_CHARACTERISTICS := nosdcard
-# Android 16 kernel matrices start at 5.4 (FCM 5); this device runs 4.14 (was 4.9).
-PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
+# msm-4.14 meets the FCM level 7 kernel requirements (4.14.336 section).
+PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := true
 PRODUCT_SHIPPING_API_LEVEL := 28
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
