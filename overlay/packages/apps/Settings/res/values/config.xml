@@ -33,4 +33,9 @@
          should be either LOW (1) or HIGH (3).
     -->
     <integer name="config_vibration_supported_intensity_levels">2</integer>
+    <!-- Switch to an inserted removable SIM when no eSIM profile is enabled (and show the
+         notification). AOSP default is false; stock Pixel firmware turns it on. Without it a
+         device whose active slot is the eUICC never moves to the tray SIM (Settings logs
+         "SlotChangeReceiver: The flag is off. Ignore slot changes."). -->
+    <bool name="config_handle_sim_slot_change">true</bool>
 </resources>
