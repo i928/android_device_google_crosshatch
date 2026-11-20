@@ -34,6 +34,11 @@ PRODUCT_COPY_FILES += \
 # Google Assistant
 PRODUCT_PRODUCT_PROPERTIES += ro.opa.eligible_device=true
 
+# Kernel
+# msm-4.14 (k414) has MREMAP_DONTUNMAP, UFFD_USER_MODE_ONLY, UFFD_FEATURE_SIGBUS and
+# UFFDIO_*_MODE_MMAP_TRYLOCK; vendor API level 28 would otherwise leave ART on CC.
+PRODUCT_ENABLE_UFFD_GC := true
+
 # Lineage Health
 include hardware/google/pixel/lineage_health/device.mk
 
