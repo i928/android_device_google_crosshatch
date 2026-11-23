@@ -42,6 +42,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init.data-adb-seed.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.data-adb-seed.rc \
+    $(LOCAL_PATH)/init.schedstats.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.schedstats.rc \
     $(LOCAL_PATH)/data-adb-seed/daily_clean.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/daily_clean.sh \
     $(LOCAL_PATH)/data-adb-seed/boot-completed.d/daily_clean_timer.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/daily_clean_timer.sh \
     $(LOCAL_PATH)/data-adb-seed/boot-completed.d/shizuku_dedup.sh:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/data-adb-seed/boot-completed.d/shizuku_dedup.sh \

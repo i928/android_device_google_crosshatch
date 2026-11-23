@@ -1,0 +1,8 @@
+# Turn off schedstats collection once boot completes. atrace.rc writes sched_schedstats=1 at late-init.
+# On msm-4.14 that costs ~5% per wakeup/context-switch round trip, with no throughput change (sunfish A/B
+# 2026-11-22, see the kernel's arch/arm64/configs/sunfish_defconfig.md). CONFIG_SCHEDSTATS stays built in, so
+# /proc/<pid>/schedstat still works. Perfetto's sched_blocked_reason needs it on; for such a trace, as root:
+#   echo 1 > /proc/sys/kernel/sched_schedstats
+# Lives in system_ext (init domain): vendor_init may not write proc_sched.
+on property:sys.boot_completed=1
+    write /proc/sys/kernel/sched_schedstats 0
