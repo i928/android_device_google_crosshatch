@@ -747,6 +747,8 @@ PRODUCT_VENDOR_PROPERTIES += ro.soc.model=SDM845
 
 # USB webcam (UVC gadget + DeviceAsWebcam)
 PRODUCT_VENDOR_PROPERTIES += ro.usb.uvc.enabled=true
+# CamX cannot map VIDEO_ENCODE-usage gralloc buffers (mmap EINVAL) -> white frames
+PRODUCT_VENDOR_PROPERTIES += ro.usb.uvc.disable_video_encode_flag=true
 PRODUCT_PACKAGES += DeviceAsWebcamOverlay
 
 # Prebuilt apps for the product partition
