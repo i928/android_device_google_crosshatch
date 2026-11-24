@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DeviceAsWebcam: skip the non-UVC /dev/video* nodes that advertise
+     V4L2_CAP_VIDEO_OUTPUT (sde_rotator, cam-req-mgr, cam_sync, vidc), so the
+     service finds the UVC gadget node. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.DeviceAsWebcam.crosshatch.overlay">
+    <application android:hasCode="false" />
+    <overlay
+      android:targetPackage="com.android.DeviceAsWebcam"
+      android:isStatic="true"
+      android:priority="0"/>
+</manifest>
