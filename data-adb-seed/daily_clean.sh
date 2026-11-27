@@ -414,6 +414,12 @@ recreate() {
 
 find "$MANAGED_DIR" -xdev -type f \( -name '*.so' -o -name '*.apk' \) -size +15k | while IFS= read -r file; do
 
+    # /data/app/vmdl<id>.tmp is PackageInstaller's staging dir for an install
+    # still in progress. Releasing a file there makes the installer's writes fail
+    # (EPERM; release can also fail EBUSY while it is open), and the session
+    # moves it to its final /data/app path anyway, where the next run finds it.
+    case "$file" in "$MANAGED_DIR"/vmdl*.tmp/*) continue ;; esac
+
     name=$(short_name "$file")
     want=lz4
     [ "$COMPRESS" = on ] || want=plain
