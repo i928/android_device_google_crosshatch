@@ -269,7 +269,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # b/166675194
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.camera.provider24.disable_mem_init=1
+    ro.vendor.camera.provider.disable_mem_init=1
 
 # camera google face detection
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -420,10 +420,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.media.transcoding.codec_max_operating_rate_1080P=240 \
     debug.media.transcoding.codec_max_operating_rate_4k=120 \
 
+# AIDL camera provider wrapping the legacy HAL3 module (camera.sdm845.so)
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service_64 \
-    camera.device@3.2-impl
+    android.hardware.camera.provider-service.lineage
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/sensors/hals.conf:vendor/etc/sensors/hals.conf
