@@ -22,6 +22,40 @@ TARGET_KERNEL_ADDITIONAL_FLAGS += KSU_VERSION_TAG_OVERRIDE=v3.4.1
 # in that line, and its KernelSU manager pin (dev.i928.mgr, cert e77745f9) matches
 # the KernelSUNext.apk this device ships in /product/app.
 TARGET_KERNEL_SOURCE := kernel/google/msm-4.14
+
+# CROSSHATCH_KERNEL_DEBUG=<variant> builds the kernel with the options of
+# $(TARGET_KERNEL_SOURCE)/build.config.bluecross_<variant> (kasan, debug_hang,
+# debug_locking, debug_memory, debug_memory_accounting, debug_api,
+# debug_kmemleak, no-cfi). Those files are for Google's build/build.sh, which
+# the ROM build never reads; kernel-debug/buildconfig2frag.py turns their
+# scripts/config options into a fragment in out/, merged after b1c1_defconfig.
+# Generated at kati time, so it always matches the kernel branch checked out.
+# Most variants turn LTO/CFI off; flash the matching vendor.img (autorun does).
+# Debug kernels are slow: never use one for timing.
+#   CROSSHATCH_KERNEL_DEBUG=kasan m bootimage vendorimage
+ifneq ($(CROSSHATCH_KERNEL_DEBUG),)
+CROSSHATCH_KDEBUG_FRAG := $(OUT_DIR)/crosshatch-kernel-debug/$(CROSSHATCH_KERNEL_DEBUG).config
+_kdebug := $(shell mkdir -p $(dir $(CROSSHATCH_KDEBUG_FRAG)) && \
+    python3 device/google/crosshatch/kernel-debug/buildconfig2frag.py \
+    $(TARGET_KERNEL_SOURCE)/build.config.bluecross_$(CROSSHATCH_KERNEL_DEBUG) $(CROSSHATCH_KDEBUG_FRAG))
+ifeq ($(filter ok,$(_kdebug)),)
+$(error CROSSHATCH_KERNEL_DEBUG=$(CROSSHATCH_KERNEL_DEBUG): $(_kdebug))
+endif
+# $(warning), not $(info): Soong parses the board config stdout as KEY=value lines
+$(warning CROSSHATCH_KERNEL_DEBUG -> kernel fragment $(CROSSHATCH_KDEBUG_FRAG), $(_kdebug))
+TARGET_KERNEL_CONFIG_EXT += $(CROSSHATCH_KDEBUG_FRAG)
+ifneq ($(CROSSHATCH_KDEBUG_SURVEY),0)
+TARGET_KERNEL_CONFIG_EXT += device/google/crosshatch/kernel-debug/survey.config
+endif
+ifneq ($(filter kasan,$(CROSSHATCH_KERNEL_DEBUG)),)
+TARGET_KERNEL_CONFIG_EXT += device/google/crosshatch/kernel-debug/kasan-nokfence.config
+endif
+ifeq ($(CROSSHATCH_KERNEL_DEBUG),debug_api)
+# arm64 preallocates 4096 DMA-API entries; they run out ~17 s into boot and
+# DMA-API debugging then turns itself off.
+BOARD_KERNEL_CMDLINE += dma_debug_entries=262144
+endif
+endif
 # Userspace is built against msm-4.9's UAPI headers: the vendor blobs (camera, codec,
 # audio ACDB...) and the ported b1c1 drivers (camera, vidc, audio, legacy ION) keep the
 # 4.9 ABI. Built against 4.14 headers, gralloc sized video buffers differently and the
